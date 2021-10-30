@@ -25,13 +25,14 @@
 }
 
 .logo {
-  color: red;
+  color: #2f9e44;
   font-size: 20px;
   text-transform: uppercase;
 }
 
 .logo a {
-  color: red;
+  color: #2f9e44;
+  font-weight: 500;
 }
 
 @media (max-width: 768px) {
