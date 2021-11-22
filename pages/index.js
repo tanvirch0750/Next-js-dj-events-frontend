@@ -4,7 +4,6 @@ import EventItem from "@/components/EventItem";
 import Link from "next/link";
 
 export default function HomePage({ events }) {
-  console.log(events);
   return (
     <Layout>
       <h1>Home Page</h1>
