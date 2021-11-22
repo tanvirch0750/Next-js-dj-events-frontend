@@ -1,35 +1,66 @@
+import { ToastContainer, toast } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
 import { useState } from "react";
-//import { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import Link from "next/link";
-//import { API_URL } from "@/config/index";
+import { API_URL } from "@/config/index";
 import Layout from "@/components/Layout";
 import styles from "@/styles/Form.module.css";
 
 export default function EventsAdd() {
   const [values, setValues] = useState({
-    name: " ",
-    performers: " ",
-    venue: " ",
-    address: " ",
-    date: " ",
-    description: " ",
+    name: "",
+    performers: "",
+    venue: "",
+    address: "",
+    date: "",
+    description: "",
   });
 
-  //const router = useRouter()
+  const router = useRouter();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(values);
+    // validation
+    const hasEmptyFields = Object.values(values).some(
+      (element) => element === ""
+    );
+
+    if (hasEmptyFields) {
+      return toast.error("Please fill in all the fields");
+    }
+
+    const res = await fetch(`${API_URL}/events`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(values),
+    });
+
+    if (!res.ok) {
+      // if (res.status === 403 || res.status === 401) {
+      //   toast.error('No token included')
+      //   return
+      // }
+      toast.error("Something Went Wrong");
+    } else {
+      const evt = await res.json();
+      router.push(`/events/${evt.slug}`);
+    }
   };
 
   return (
     <Layout title="Add event | Dj events">
       <Link href="/events">Go Back</Link>
+      <ToastContainer />
       <h1>Add Event</h1>
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.grid}>
