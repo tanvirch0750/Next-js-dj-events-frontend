@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 
 export default function EventPage({ evt }) {
   const router = useRouter();
-  console.log(evt.id);
+
   const deleteEvent = async (e) => {
     if (confirm("Are you sure?")) {
       const res = await fetch(`${API_URL}/events/${evt.id}`, {
@@ -30,11 +30,11 @@ export default function EventPage({ evt }) {
     <Layout>
       <div className={styles.event}>
         <div className={styles.controls}>
-          {/* <Link href={`/events/edit/${evt.id}`}>
+          <Link href={`/events/edit/${evt.id}`}>
             <a>
               <FaPencilAlt /> Edit Event
             </a>
-          </Link> */}
+          </Link>
           <a href="#" className={styles.delete} onClick={deleteEvent}>
             <FaTimes /> Delete Event
           </a>
@@ -96,6 +96,7 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params: { slug } }) {
   const res = await fetch(`${API_URL}/events?slug=${slug}`);
+
   const event = await res.json();
 
   return {

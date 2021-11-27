@@ -1,4 +1,5 @@
 import moment from "moment";
+import { FaImage } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useState } from "react";
@@ -7,16 +8,22 @@ import Link from "next/link";
 import { API_URL } from "@/config/index";
 import Layout from "@/components/Layout";
 import styles from "@/styles/Form.module.css";
+import Image from "next/image";
 
-export default function EventsAdd() {
+export default function EditEventsPage({ evt }) {
   const [values, setValues] = useState({
-    name: "",
-    performers: "",
-    venue: "",
-    address: "",
-    date: "",
-    description: "",
+    name: evt.name,
+    performers: evt.performers,
+    venue: evt.venue,
+    address: evt.address,
+    date: evt.date,
+    time: evt.time,
+    description: evt.description,
   });
+
+  const [imgPreview, setImgPreview] = useState(
+    evt.image ? evt.image.formats.thumbnail.url : null
+  );
 
   const router = useRouter();
 
@@ -36,8 +43,8 @@ export default function EventsAdd() {
       return toast.error("Please fill in all the fields");
     }
 
-    const res = await fetch(`${API_URL}/events`, {
-      method: "POST",
+    const res = await fetch(`${API_URL}/events/${evt.id}`, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         // Authorization: `Bearer ${token}`,
@@ -61,7 +68,7 @@ export default function EventsAdd() {
     <Layout title="Add event | Dj events">
       <Link href="/events">Go Back</Link>
       <ToastContainer />
-      <h1>Add Event</h1>
+      <h1>Edit Event</h1>
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.grid}>
           <div>
@@ -136,8 +143,35 @@ export default function EventsAdd() {
           ></textarea>
         </div>
 
-        <input type="submit" value="Add Event" className="btn" />
+        <input type="submit" value="Update Event" className="btn" />
       </form>
+      <h2>Event Image</h2>
+      {imgPreview ? (
+        <Image src={imgPreview} height={140} width={200} />
+      ) : (
+        <div>
+          <p>No Image Uploaded</p>
+        </div>
+      )}
+      <div>
+        <button className="btn-secondary">
+          <FaImage /> <span style={{ marginLeft: "5px" }}>Set Image</span>
+        </button>
+      </div>
     </Layout>
   );
+}
+
+export async function getServerSideProps({ params: { id }, req }) {
+  //const { token } = parseCookies(req)
+
+  const res = await fetch(`${API_URL}/events/${id}`);
+  const evt = await res.json();
+
+  return {
+    props: {
+      evt,
+      //token,
+    },
+  };
 }
