@@ -1,3 +1,4 @@
+import ImageUpload from "@/components/ImageUpload";
 import Layout from "@/components/Layout";
 import Modal from "@/components/Modal";
 import { API_URL } from "@/config/index";
@@ -65,6 +66,13 @@ export default function EditEventsPage({ evt }) {
       const evt = await res.json();
       router.push(`/events/${evt.slug}`);
     }
+  };
+
+  const imageUploaded = async (e) => {
+    const res = await fetch(`${API_URL}/events/${evt.id}`);
+    const data = await res.json();
+    setImgPreview(data.image.formats.thumbnail.url);
+    setShowModal(false);
   };
 
   return (
@@ -164,7 +172,7 @@ export default function EditEventsPage({ evt }) {
 
       <div>
         <Modal show={showModal} onClose={() => setShowModal(false)}>
-          Image upload
+          <ImageUpload evtId={evt.id} imageUploaded={imageUploaded} />
         </Modal>
       </div>
     </Layout>
