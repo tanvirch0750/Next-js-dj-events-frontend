@@ -54,6 +54,7 @@ export default function EventsAdd() {
     } else {
       const evt = await res.json();
       router.push(`/events/${evt.slug}`);
+      toast.success("Event added successfully");
     }
   };
 

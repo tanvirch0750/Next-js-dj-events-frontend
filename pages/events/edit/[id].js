@@ -1,14 +1,15 @@
-import moment from "moment";
-import { FaImage } from "react-icons/fa";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { useState } from "react";
-import { useRouter } from "next/router";
-import Link from "next/link";
-import { API_URL } from "@/config/index";
 import Layout from "@/components/Layout";
+import Modal from "@/components/Modal";
+import { API_URL } from "@/config/index";
 import styles from "@/styles/Form.module.css";
+import moment from "moment";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { FaImage } from "react-icons/fa";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function EditEventsPage({ evt }) {
   const [values, setValues] = useState({
@@ -24,6 +25,8 @@ export default function EditEventsPage({ evt }) {
   const [imgPreview, setImgPreview] = useState(
     evt.image ? evt.image.formats.thumbnail.url : null
   );
+
+  const [showModal, setShowModal] = useState(false);
 
   const router = useRouter();
 
@@ -154,9 +157,15 @@ export default function EditEventsPage({ evt }) {
         </div>
       )}
       <div>
-        <button className="btn-secondary">
+        <button className="btn-secondary" onClick={() => setShowModal(true)}>
           <FaImage /> <span style={{ marginLeft: "5px" }}>Set Image</span>
         </button>
+      </div>
+
+      <div>
+        <Modal show={showModal} onClose={() => setShowModal(false)}>
+          Image upload
+        </Modal>
       </div>
     </Layout>
   );
