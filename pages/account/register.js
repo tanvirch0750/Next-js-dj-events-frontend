@@ -1,7 +1,8 @@
 import Layout from "@/components/Layout";
+import AuthContext from "@/context/AuthContext";
 import styles from "@/styles/AuthForm.module.css";
 import Link from "next/link";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -12,6 +13,8 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const { register, error } = useContext(AuthContext);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -19,6 +22,8 @@ const Register = () => {
       toast.error("Password does not match");
       return;
     }
+
+    register({ userName, email, password });
   };
   return (
     <Layout title="User Registration">
